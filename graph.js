@@ -1,8 +1,13 @@
 queue()
-    .defer(d3.json, "data/transactions.json")
+    .defer(d3.json, "./transactions.json")
     .await(makeGraph);
 
 function makeGraph(error, transactionsData) {
+
+    const numberWithCommas = (x) => {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
     let ndx = crossfilter(transactionsData);
 
     let parseDate = d3.time.format("%d/%m/%Y").parse;
@@ -48,7 +53,7 @@ function makeGraph(error, transactionsData) {
                 if (+b.getAttribute('height') < 18) continue;
 
                 gLabels.append("text")
-                    .text(barsData[i].data.value)
+                    .text(numberWithCommas(barsData[i].data.value))
                     .attr('x', +b.getAttribute('x') + (b.getAttribute('width') / 2))
                     .attr('y', +b.getAttribute('y') + 15)
                     .attr('text-anchor', 'middle')
